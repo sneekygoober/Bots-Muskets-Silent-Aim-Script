@@ -105,7 +105,7 @@ local setup = function(char: Model)
     connection = char.ChildAdded:Connect(function(gun)
         if gun:IsA("Tool") and not cache[gun.Name] then
             local client: LocalScript?, shoot: RemoteEvent? = gun:FindFirstChild(gun.Name.."Client"), gun:FindFirstChildOfClass("RemoteEvent");
-            if not (client and shoot) then return print("d"); end;
+            if not (client and shoot) then return; end;
 
             local f = filter(client, false, "RaycastParams", "new", "Ray", "FireServer", "fire");
             if f then
