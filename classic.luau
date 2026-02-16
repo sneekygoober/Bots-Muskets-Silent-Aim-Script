@@ -93,27 +93,27 @@ local hook = function(f: () -> () | boolean, shoot: RemoteEvent)
     end)));
 end;
 
-local fasync = function(...)
-    for i = 1, 20 do
-        local f = filter(...)
-        if f then return f; end;
-        task.wait(0.1);
-    end;
-
-    return false;
-end;
+local cache: {string: string} = {};
+local connection: RBXScriptConnection;
 
 local setup = function(char: Model)
     task.wait(1);
 
-    local gun: Tool? = plr.Backpack:FindFirstChildOfClass("Tool") or char:FindFirstChildOfClass("Tool");
-    if not gun then return; end;
+    if connection then connection:Disconnect(); end;
+    table.clear(cache);
 
-    local client: LocalScript?, shoot: RemoteEvent? = gun:FindFirstChildOfClass("LocalScript"), gun:FindFirstChildOfClass("RemoteEvent");
-    if not (client and shoot) then return; end;
+    connection = char.ChildAdded:Connect(function(gun)
+        if gun:IsA("Tool") and not cache[gun.Name] then
+            local client: LocalScript?, shoot: RemoteEvent? = gun:FindFirstChild(gun.Name.."Client"), gun:FindFirstChildOfClass("RemoteEvent");
+            if not (client and shoot) then return print("d"); end;
 
-    local f = fasync(client, false, "fire", "RaycastParams", "new", "Ray", 1, "FireServer");
-    hook(f, shoot);
+            local f = filter(client, false, "RaycastParams", "new", "Ray", "FireServer", "fire");
+            if f then
+                cache[gun.Name] = true;
+                hook(f, shoot);
+            end;
+        end;
+    end);
 end;
 
 if plr.Character then task.defer(setup, plr.Character); end;
