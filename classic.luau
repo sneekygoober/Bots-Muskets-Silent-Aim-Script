@@ -112,7 +112,7 @@ local setup = function(char: Model)
         local client: LocalScript?, shoot: RemoteEvent? = gun:FindFirstChild(gun.Name.."Client"), gun:FindFirstChildOfClass("RemoteEvent");
         if not (client and shoot) then return; end;
 
-        local f = filter(client, false, "RaycastParams", "new", "Ray", "FireServer", "Shoot");
+        local f = filter(client, false, "RaycastParams", "new", "Ray", "FireServer", "fire");
         if f then
             cache[gun.Name] = true;
             hook(f, shoot);
