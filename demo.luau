@@ -105,18 +105,29 @@ local setup = function(char: Model)
     if connection then connection:Disconnect(); end;
     table.clear(cache);
 
-    connection = char.ChildAdded:Connect(function(gun)
-        if gun:IsA("Tool") and not cache[gun.Name] then
-            local client: LocalScript?, shoot: RemoteEvent? = gun:FindFirstChild(gun.Name.."LocalScript"), gun:FindFirstChildOfClass("RemoteEvent");
-            if not (client and shoot) then return; end;
+    local _ = function(gun: Tool)
+        if cache[gun.Name] then return; end;
 
-            local f = filter(client, false, "RaycastParams", "new", "Ray", "FireServer", "Shoot");
-            if f then
-                cache[gun.Name] = true;
-                hook(f, shoot);
-            end;
+        local client: LocalScript?, shoot: RemoteEvent? = gun:FindFirstChild(gun.Name.."LocalScript"), gun:FindFirstChildOfClass("RemoteEvent");
+        if not (client and shoot) then return; end;
+
+        local f = filter(client, false, "RaycastParams", "new", "Ray", "FireServer", "Shoot");
+        if f then
+            cache[gun.Name] = true;
+            hook(f, shoot);
+        end;
+    end;
+
+    connection = char.ChildAdded:Connect(function(gun)
+        if gun.ClassName == "Tool" then
+            _(gun);
         end;
     end);
+
+    local gun = char:FindFirstChildOfClass("Tool");
+    if not gun then return; end;
+
+    _(gun);
 end;
 
 if plr.Character then task.defer(setup, plr.Character); end;
