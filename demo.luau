@@ -56,7 +56,7 @@ local isVisible = function(part: BasePart): (boolean, Instance?)
 end;
 
 local getTarget = function()
-    local cPart, cDistance = nil, math.huge;
+    local cPart, cDistance = nil, getgenv().fov or 300;
 
     for _, char: Model in next, enemies:GetChildren() do
         if char:FindFirstChildOfClass("ForceField") or (char:FindFirstChild("Humanoid") and char.Humanoid.Health <= 0) then continue; end;
@@ -83,6 +83,8 @@ local getTarget = function()
     end;
     return cPart;
 end;
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/sneekygoober/sneeky-s-fov-lib/refs/heads/main/main.luau"))()(getgenv().fov or 300, getTarget);
 
 local hook = function(f: () -> () | boolean, shoot: RemoteEvent)
     local old; old = clonefunction(hookfunction(f, newcclosure(function()
