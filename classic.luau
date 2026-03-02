@@ -31,16 +31,17 @@ if not enemies then
     local err = "Script needs updating";
     SG["error"](err);
     return warn(err);
-end
+end;
+
+local rp = RaycastParams.new();
+rp.FilterType = Enum.RaycastFilterType.Exclude;
+rp.IgnoreWater = true;
 
 local isVisible = function(part: BasePart): (boolean, Instance?)
     local char = plr.Character;
     if not (char and part) then return false, nil; end;
 
-    local rp = RaycastParams.new();
-    rp.FilterType = Enum.RaycastFilterType.Exclude;
     rp.FilterDescendantsInstances = {char};
-    rp.IgnoreWater = true;
 
     local origin = cam.CFrame.Position;
 
