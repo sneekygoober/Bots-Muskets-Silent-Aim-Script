@@ -21,6 +21,8 @@ local UIS: UserInputService = cloneref(game:GetService("UserInputService"));
 local plr = Players.LocalPlayer;
 local cam = workspace.CurrentCamera;
 
+local isMobile = UIS.TouchEnabled and not UIS.KeyboardEnabled and not UIS.MouseEnabled;
+
 local enemies = workspace:FindFirstChild("Enemies");
 if not enemies then
     local err = "Script needs updating";
@@ -71,7 +73,7 @@ local getTarget = function()
 
         if nTPart then tPart = nTPart; end;
 
-        local distance = (Vector2.new(pos.X, pos.Y) - UIS:GetMouseLocation()).Magnitude;
+        local distance = (Vector2.new(pos.X, pos.Y) - (isMobile and Vector2.new(cam.ViewportSize.X/2, cam.ViewportSize.Y/2) or UIS:GetMouseLocation())).Magnitude;
         if distance < cDistance then
             cPart = tPart;
             cDistance = distance;
