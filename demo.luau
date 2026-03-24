@@ -82,7 +82,7 @@ local getTarget = function()
     return cPart;
 end;
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/sneekygoober/sneeky-s-fov-lib/refs/heads/main/main.luau"))()(getgenv().fov or 300, getTarget);
+loadstring(game:HttpGet("https://raw.githubusercontent.com/sneekygoober/sneeky-s-fov-lib/refs/heads/main/main.luau"))()(getgenv().fov or 300, getTarget, true);
 
 local hook = function(f: () -> () | boolean, shoot: RemoteEvent)
     local old; old = clonefunction(hookfunction(f, newcclosure(function()
